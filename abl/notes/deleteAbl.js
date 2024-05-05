@@ -1,10 +1,9 @@
 const Ajv = require("ajv");
 const ajv = new Ajv();
 
-const eventDao = require("../../dao/event-dao.js");
-const attendanceDao = require("../../dao/attendance-dao.js");
+const eventDao = require("../../dao/notes-dao.js");
 
-const schema = {
+const deleteNoteDtoInschema = {
   type: "object",
   properties: {
     id: { type: "string", minLength: 32, maxLength: 32 },
@@ -19,7 +18,7 @@ async function DeleteAbl(req, res) {
     const reqParams = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, reqParams);
+    const valid = ajv.validate(deleteNoteDtoInschema, reqParams);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",
@@ -29,16 +28,7 @@ async function DeleteAbl(req, res) {
       return;
     }
 
-    const attendanceMap = attendanceDao.eventMap();
-    if (attendanceMap[reqParams.id]) {
-      res.status(400).json({
-        code: "eventHasAttendances",
-        message: `Event ${reqParams.id} has attendances`,
-      });
-      return;
-    }
-
-    eventDao.remove(reqParams.id);
+    notesDao.remove(reqParams.id);
     res.json({});
   } catch (e) {
     res.status(500).json({ message: e.message });

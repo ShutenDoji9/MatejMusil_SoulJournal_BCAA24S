@@ -3,10 +3,9 @@ const addFormats = require("ajv-formats").default;
 const ajv = new Ajv();
 addFormats(ajv);
 
-const eventDao = require("../../dao/event-dao.js");
-const attendanceDao = require("../../dao/attendance-dao.js");
+const notesDao = require("../../dao/notes-dao.js");
 
-const schema = {
+const getNoteDtoInSchema = {
   type: "object",
   properties: {
     id: { type: "string", minLength: 32, maxLength: 32 },
@@ -21,7 +20,7 @@ async function GetAbl(req, res) {
     const reqParams = req.query?.id ? req.query : req.body;
 
     // validate input
-    const valid = ajv.validate(schema, reqParams);
+    const valid = ajv.validate(getNoteDtoInSchema, reqParams);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",
@@ -31,20 +30,17 @@ async function GetAbl(req, res) {
       return;
     }
 
-    // read event by given id
-    const event = eventDao.get(reqParams.id);
-    if (!event) {
+    // read note by given id
+    const note = notesDao.get(reqParams.id);
+    if (!note) {
       res.status(404).json({
-        code: "eventNotFound",
-        message: `Event ${reqParams.id} not found`,
+        code: "noteNotFound",
+        message: `Note ${reqParams.id} not found`,
       });
       return;
     }
 
-    const attendanceMap = attendanceDao.eventMap();
-    event.userMap = attendanceMap[reqParams.id] || {};
-
-    res.json(event);
+    res.json(note);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

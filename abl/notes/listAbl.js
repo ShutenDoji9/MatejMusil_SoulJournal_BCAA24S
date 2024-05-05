@@ -1,9 +1,9 @@
-const messageDao = require("../../dao/message-dao.js");
+const noteDao = require("../../dao/notes-dao.js");
 
 async function ListAbl(req, res) {
   try {
-    const messageList = messageDao.list();
-    res.json(messageList);
+    const noteList = noteDao.list();
+    res.json(noteList);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

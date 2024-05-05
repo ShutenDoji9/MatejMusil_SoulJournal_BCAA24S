@@ -3,7 +3,7 @@ const ajv = new Ajv();
 
 const userDao = require("../../dao/user-dao.js");
 
-const schema = {
+const userGetDtoInSchema = {
   type: "object",
   properties: {
     id: { type: "string", minLength: 32, maxLength: 32 },
@@ -18,7 +18,7 @@ async function GetAbl(req, res) {
     const reqParams = req.query?.id ? req.query : req.body;
 
     // validate input
-    const valid = ajv.validate(schema, reqParams);
+    const valid = ajv.validate(userGetDtoInSchema, reqParams);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",

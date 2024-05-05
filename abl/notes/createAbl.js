@@ -3,14 +3,15 @@ const addFormats = require("ajv-formats").default;
 const ajv = new Ajv();
 addFormats(ajv);
 
-const eventDao = require("../../dao/event-dao.js");
+const notesDao = require("../../dao/notes-dao.js");
 
-const schema = {
+const createNoteDtoInSchema = {
   type: "object",
   properties: {
-    date: { type: "string", format: "date-time" },
     name: { type: "string", minLength: 3 },
-    desc: { type: "string" },
+    date: { type: "string", format: "date-time" },
+    note: { type: "string" },
+    userId: { type: "string" },
   },
   required: ["date", "name"],
   additionalProperties: false,
@@ -18,10 +19,10 @@ const schema = {
 
 async function CreateAbl(req, res) {
   try {
-    let event = req.body;
+    let note = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, event);
+    const valid = ajv.validate(createNoteDtoInSchema, note);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",
@@ -31,8 +32,8 @@ async function CreateAbl(req, res) {
       return;
     }
 
-    event = eventDao.create(event);
-    res.json(event);
+    note = notesDao.create(note);
+    res.json(note);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

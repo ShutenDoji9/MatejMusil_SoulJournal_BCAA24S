@@ -1,17 +1,17 @@
 const Ajv = require("ajv");
+const addFormats = require("ajv-formats").default;
 const ajv = new Ajv();
-const validateDateTime = require("../../helpers/validate-date-time.js");
-ajv.addFormat("date-time", { validate: validateDateTime });
+addFormats(ajv);
 
-const messageDao = require("../../dao/message-dao.js");
+const noteDao = require("../../dao/notes-dao.js");
 
-const schema = {
+const updateNoteDtoInSchema = {
   type: "object",
   properties: {
-    id: { type: "string" },
+    id: { type: "string", minLength: 32, maxLength: 32 },
     date: { type: "string", format: "date-time" },
-    name: { type: "string" },
-    message: { type: "string" },
+    name: { type: "string", minLength: 3 },
+    note: { type: "string" },
   },
   required: ["id"],
   additionalProperties: false,
@@ -19,10 +19,10 @@ const schema = {
 
 async function UpdateAbl(req, res) {
   try {
-    let message = req.body;
+    let note = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, message);
+    const valid = ajv.validate(updateNoteDtoInSchema, note);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",
@@ -32,17 +32,16 @@ async function UpdateAbl(req, res) {
       return;
     }
 
-    const updatedMessage = messageDao.update(message);
-
-    if (!updatedMessage) {
+    const updatedNote = noteDao.update(note);
+    if (!updatedEvent) {
       res.status(404).json({
-        code: "messageNotFound",
-        message: `Message ${message.id} not found`,
+        code: "noteNotFound",
+        message: `Event ${note.id} not found`,
       });
       return;
     }
 
-    res.json(updatedMessage);
+    res.json(updatedNote);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }

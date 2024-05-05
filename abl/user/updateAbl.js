@@ -5,7 +5,7 @@ addFormats(ajv);
 
 const userDao = require("../../dao/user-dao.js");
 
-const schema = {
+const userUpdateDtoInschema = {
   type: "object",
   properties: {
     id: { type: "string", minLength: 32, maxLength: 32 },
@@ -21,7 +21,7 @@ async function UpdateAbl(req, res) {
     let user = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, user);
+    const valid = ajv.validate(userUpdateDtoInschema, user);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",

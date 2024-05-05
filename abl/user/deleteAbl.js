@@ -4,7 +4,7 @@ const ajv = new Ajv();
 const userDao = require("../../dao/user-dao.js");
 const attendanceDao = require("../../dao/attendance-dao.js");
 
-const schema = {
+const userDeleteDtoInSchema = {
   type: "object",
   properties: {
     id: { type: "string", minLength: 32, maxLength: 32 },
@@ -19,7 +19,7 @@ async function DeleteAbl(req, res) {
     const reqParams = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, reqParams);
+    const valid = ajv.validate(userDeleteDtoInSchema, reqParams);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",

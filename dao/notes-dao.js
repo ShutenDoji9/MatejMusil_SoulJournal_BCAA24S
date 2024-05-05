@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
-const noteFolderPath = path.join(__dirname, "storage", "noteList");
+const noteFolderPath = path.join(__dirname, "storage", "notesList");
 
 // Method to read an note from a file
 function get(noteId) {
@@ -12,20 +12,21 @@ function get(noteId) {
     return JSON.parse(fileData);
   } catch (error) {
     if (error.code === "ENOENT") return null;
-    throw { code: "failedToReadNote", note: error.note };
+    throw { code: "failedToReadNote", message: error.message };
   }
 }
 
 // Method to write an note to a file
 function create(note) {
   try {
+    ß;
     note.id = crypto.randomBytes(16).toString("hex");
-    const filePath = path.join(noteFolderPath, `${note.id}.json`);
+    const filePath = path.join(noteFolderPathFolderPath, `${note.id}.json`);
     const fileData = JSON.stringify(note);
     fs.writeFileSync(filePath, fileData, "utf8");
     return note;
   } catch (error) {
-    throw { code: "failedToCreateNote", note: error.note };
+    throw { code: "failedToCreateNote", message: error.message };
   }
 }
 
@@ -40,7 +41,7 @@ function update(note) {
     fs.writeFileSync(filePath, fileData, "utf8");
     return newNote;
   } catch (error) {
-    throw { code: "failedToUpdateNote", note: error.note };
+    throw { code: "failedToUpdateNote", message: error.message };
   }
 }
 
@@ -51,10 +52,8 @@ function remove(noteId) {
     fs.unlinkSync(filePath);
     return {};
   } catch (error) {
-    if (error.code === "ENOENT") {
-      return {};
-    }
-    throw { code: "failedToRemoveNote", note: error.note };
+    if (error.code === "ENOENT") return {};
+    throw { code: "failedToRemoveNote", message: error.message };
   }
 }
 
@@ -66,9 +65,10 @@ function list() {
       const fileData = fs.readFileSync(path.join(noteFolderPath, file), "utf8");
       return JSON.parse(fileData);
     });
+    noteList.sort((a, b) => new Date(a.date) - new Date(b.date));
     return noteList;
   } catch (error) {
-    throw { code: "failedToListNotes", note: error.note };
+    throw { code: "failedToListNote", message: error.message };
   }
 }
 

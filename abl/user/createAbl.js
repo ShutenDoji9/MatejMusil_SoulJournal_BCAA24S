@@ -8,7 +8,7 @@ ajv.addFormat("date-time", { validate: validateDateTime });
 
 const userDao = require("../../dao/user-dao.js");
 
-const schema = {
+const userCreateDtoInSchema = {
   type: "object",
   properties: {
     name: { type: "string", minLength: 3 },
@@ -23,7 +23,7 @@ async function CreateAbl(req, res) {
     let user = req.body;
 
     // validate input
-    const valid = ajv.validate(schema, user);
+    const valid = ajv.validate(userCreateDtoInSchema, user);
     if (!valid) {
       res.status(400).json({
         code: "dtoInIsNotValid",
