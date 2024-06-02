@@ -6,7 +6,7 @@ const port = 8000;
 const userController = require("./controller/user");
 const noteController = require("./controller/note");
 
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());

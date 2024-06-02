@@ -2,7 +2,6 @@ const Ajv = require("ajv");
 const ajv = new Ajv();
 
 const userDao = require("../../dao/user-dao.js");
-const attendanceDao = require("../../dao/attendance-dao.js");
 
 const userDeleteDtoInSchema = {
   type: "object",
@@ -25,15 +24,6 @@ async function DeleteAbl(req, res) {
         code: "dtoInIsNotValid",
         message: "dtoIn is not valid",
         validationError: ajv.errors,
-      });
-      return;
-    }
-
-    const attendanceMap = attendanceDao.userMap();
-    if (attendanceMap[reqParams.id]) {
-      res.status(400).json({
-        code: "userHasAttendances",
-        message: `User ${reqParams.id} has attendances`,
       });
       return;
     }
