@@ -1,7 +1,7 @@
 import React from "react";
-import "./App.css";
-import Navbar from "./components/Navbar";
-import Dashboard from "./components/Dashboard";
+import "./app.css";
+import Navbar from "./components/navbar";
+import Dashboard from "./components/dashboard";
 
 function App() {
   return (
